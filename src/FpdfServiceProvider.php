@@ -1,4 +1,4 @@
-<?php namespace Codedge\Fpdf;
+<?php namespace Tesarwijaya\Fpdf;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,9 +18,11 @@ class FpdfServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/config/fpdf.php' => config_path('fpdf.php'),
-        ], 'config');
+        if (function_exists('config_path')) {
+            $this->publishes([
+                __DIR__.'/config/fpdf.php' => config_path('fpdf.php'),
+            ], 'config');
+        }
     }
 
     /**
@@ -31,6 +33,9 @@ class FpdfServiceProvider extends ServiceProvider
     public function register()
     {
         $configPath = __DIR__ . '/config/fpdf.php';
+        if (function_exists('config_path')) {
+            $configPath = config_path('fpdf.php');
+        }
         $this->mergeConfigFrom($configPath, 'fpdf');
 
         $this->app->call( [ $this, 'registerFpdf' ] );
